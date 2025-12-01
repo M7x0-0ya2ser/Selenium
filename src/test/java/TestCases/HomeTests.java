@@ -62,7 +62,7 @@ public class HomeTests extends Browser_Initiation {
     public void submitIncomeTest() throws Exception {
         test = extent.startTest("Submit Income Test");
 
-        homePage.submitIncome("2025-01-01", "6000");
+        homePage.submitIncome("2025-01-01", "10000");
         Thread.sleep(1000);
 
         Assert.assertTrue(true);
@@ -72,7 +72,7 @@ public class HomeTests extends Browser_Initiation {
     public void submitExpenseTest() throws Exception {
         test = extent.startTest("Submit Expense Test");
 
-        homePage.submitExpense("2025-01-03", "150", "Food");
+        homePage.submitExpense("2025-01-03", "1000", "Transportation");
         Thread.sleep(1000);
 
         Assert.assertTrue(true);

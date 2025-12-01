@@ -1,14 +1,17 @@
 package Util;
 
+import java.io.File;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.HasDevTools;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -46,6 +49,29 @@ public class PageBase {
         List<String> handlesList = new ArrayList<>(windowHandles);
         driver.switchTo().window(handlesList.get(handlesList.size() - 1));
     }
+
+    public void takeScreenshot(String baseName) {
+        try {
+            // Get today's date in yyyyMMdd format
+            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+            // Construct file name
+            String fileName = baseName.replaceAll("\\s+", "") + "_" + date + ".png"; // remove spaces
+
+            // For Firefox full page screenshot
+            File screenshot = ((FirefoxDriver) driver).getFullPageScreenshotAs(OutputType.FILE);
+
+            File outputFile = new File("./Screenshots/" + fileName);
+            FileUtils.copyFile(screenshot, outputFile);
+
+            System.out.println("Full page screenshot saved: " + outputFile.getAbsolutePath());
+
+        } catch (Exception e) {
+            System.out.println("Error taking full page screenshot: " + e.getMessage());
+        }
+    }
+
+
 
     public Alert switchToAlert() {
         return driver.switchTo().alert();
