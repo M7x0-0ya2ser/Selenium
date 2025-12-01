@@ -38,31 +38,31 @@ public class SignupPage extends PageBase {
     WebElement alertMessage;
 
     public void enterFirstName(String fname) {
-        waitElementToDisplay(firstName, 20);
+        waitElementToDisplay(firstName, 3);
         firstName.clear();
         firstName.sendKeys(fname);
     }
 
     public void enterLastName(String lname) {
-        waitElementToDisplay(lastName, 20);
+        waitElementToDisplay(lastName, 3);
         lastName.clear();
         lastName.sendKeys(lname);
     }
 
     public void enterEmail(String emailText) {
-        waitElementToDisplay(email, 20);
+        waitElementToDisplay(email, 3);
         email.clear();
         email.sendKeys(emailText);
     }
 
     public void enterPassword(String pass) {
-        waitElementToDisplay(password, 20);
+        waitElementToDisplay(password, 3);
         password.clear();
         password.sendKeys(pass);
     }
 
     public void selectOccupation(String occupation) {
-        waitElementsToDisplay(occupationOptions, 20);
+        waitElementsToDisplay(occupationOptions, 3);
         for (WebElement option : occupationOptions) {
             if (option.getText().equalsIgnoreCase(occupation)) {
                 option.click();
@@ -85,7 +85,7 @@ public class SignupPage extends PageBase {
     }
 
     public void clickCreateAccount() {
-        waitElementToBeClickable(createAccountButton, 5);
+        waitElementToBeClickable(createAccountButton, 3);
         createAccountButton.click();
         handleAlertIfPresent();
     }
@@ -111,7 +111,7 @@ public class SignupPage extends PageBase {
     }
 
     public String getAlertMessage() {
-        waitElementToDisplay(alertMessage, 10);
+        waitElementToDisplay(alertMessage, 3);
         return alertMessage.getText();
     }
 }

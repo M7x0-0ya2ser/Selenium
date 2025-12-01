@@ -63,7 +63,7 @@ public class HomeTests extends Browser_Initiation {
         test = extent.startTest("Submit Income Test");
 
         homePage.submitIncome("2025-01-01", "6000");
-        Thread.sleep(2000);
+        Thread.sleep(1000);
 
         Assert.assertTrue(true);
     }
@@ -73,7 +73,7 @@ public class HomeTests extends Browser_Initiation {
         test = extent.startTest("Submit Expense Test");
 
         homePage.submitExpense("2025-01-03", "150", "Food");
-        Thread.sleep(2000);
+        Thread.sleep(1000);
 
         Assert.assertTrue(true);
     }
@@ -83,7 +83,7 @@ public class HomeTests extends Browser_Initiation {
         test = extent.startTest("Open Insights Test");
 
         homePage.clickInsights();
-        Thread.sleep(2000);
+        Thread.sleep(1000);
 
         Assert.assertTrue(true);
     }
@@ -93,7 +93,7 @@ public class HomeTests extends Browser_Initiation {
         test = extent.startTest("History Navigation Test");
 
         homePage.goToHistory();
-        Thread.sleep(1500);
+        Thread.sleep(1000);
 
         String currentUrl = driver.getCurrentUrl();
         Assert.assertTrue(currentUrl.contains("history"));
@@ -104,7 +104,7 @@ public class HomeTests extends Browser_Initiation {
         test = extent.startTest("Logout Test");
 
         homePage.logout();
-        Thread.sleep(1500);
+        Thread.sleep(1000);
 
         String currentUrl = driver.getCurrentUrl();
         Assert.assertEquals(currentUrl, "http://localhost:5173/");

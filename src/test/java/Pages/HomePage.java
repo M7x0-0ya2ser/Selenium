@@ -49,12 +49,12 @@ public class HomePage extends PageBase {
     WebElement historyButton;
 
     public String getUserId() {
-        waitElementToDisplay(userIdLabel, 5);
+        waitElementToDisplay(userIdLabel, 3);
         return userIdLabel.getText();
     }
 
     public void submitIncome(String date, String amount) {
-        waitElementToDisplay(incomeDate, 5);
+        waitElementToDisplay(incomeDate, 3);
         incomeDate.sendKeys(date);
         incomeAmount.sendKeys(amount);
         incomeSubmit.click();
@@ -62,7 +62,7 @@ public class HomePage extends PageBase {
     }
 
     public void submitExpense(String date, String amount, String category) {
-        waitElementToDisplay(expenseDate, 5);
+        waitElementToDisplay(expenseDate, 3);
         expenseDate.sendKeys(date);
         expenseAmount.sendKeys(amount);
         selectCategory(category);
@@ -71,29 +71,29 @@ public class HomePage extends PageBase {
     }
 
     public void selectCategory(String category) {
-        waitElementToDisplay(categorySelect, 5);
+        waitElementToDisplay(categorySelect, 3);
         categorySelect.click();
         categorySelect.findElement(By.xpath("//option[text()='" + category + "']")).click();
     }
 
     public void goToHistory() {
-        waitElementToBeClickable(historyButton, 5);
+        waitElementToBeClickable(historyButton, 3);
         historyButton.click();
     }
 
     public void clickInsights() {
-        waitElementToBeClickable(insightsButton, 5);
+        waitElementToBeClickable(insightsButton, 3);
         insightsButton.click();
     }
 
     public void logout() {
-        waitElementToBeClickable(logoutButton, 5);
+        waitElementToBeClickable(logoutButton, 3);
         logoutButton.click();
     }
 
     public void handleAlertIfPresent() {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(1));
             Alert alert = wait.until(ExpectedConditions.alertIsPresent());
             alert.accept();
         } catch (Exception ignored) {}

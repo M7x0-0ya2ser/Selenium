@@ -48,7 +48,7 @@ public class LoginTests extends Browser_Initiation {
 
         loginPage.login("admin@admin.com", "StR0n9P@$$w0rd");
 
-        Thread.sleep(1500);
+        Thread.sleep(1000);
 
         String currentUrl = driver.getCurrentUrl();
         Assert.assertEquals(currentUrl, "http://localhost:5173/main");

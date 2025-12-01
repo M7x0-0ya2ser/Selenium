@@ -31,20 +31,20 @@ public class LoginPage extends PageBase {
 
 
     public void enterEmail(String emailText) {
-        waitElementToDisplay(emailInput, 5);
+        waitElementToDisplay(emailInput, 3);
         emailInput.clear();
         emailInput.sendKeys(emailText);
     }
 
     public void enterPassword(String pass) {
-        waitElementToDisplay(passwordInput, 5);
+        waitElementToDisplay(passwordInput, 3);
         passwordInput.clear();
         passwordInput.sendKeys(pass);
     }
 
     public void handleAlertIfPresent() {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
             Alert alert = wait.until(ExpectedConditions.alertIsPresent());
             alert.accept();
         } catch (TimeoutException e) {
@@ -53,7 +53,7 @@ public class LoginPage extends PageBase {
     }
 
     public void clickLogin() {
-        waitElementToBeClickable(loginButton, 10);
+        waitElementToBeClickable(loginButton, 3);
         loginButton.click();
         handleAlertIfPresent();
     }

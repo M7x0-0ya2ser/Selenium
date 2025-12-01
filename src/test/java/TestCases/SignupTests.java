@@ -52,7 +52,7 @@ public class SignupTests extends Browser_Initiation {
 
         signupPage.signup("John", "Doe", "john.doe" + System.currentTimeMillis() + "@gmail.com", "StR0n9P@$$w0rd", "Full-time Employee");
 
-        Thread.sleep(2000);
+        Thread.sleep(1000);
 
         String currentUrl = driver.getCurrentUrl();
         Assert.assertEquals(currentUrl , "http://localhost:5173/");
