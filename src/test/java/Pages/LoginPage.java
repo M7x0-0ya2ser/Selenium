@@ -1,67 +1,82 @@
 package Pages;
 
 import Util.PageBase;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+import java.util.List;
 
 public class LoginPage extends PageBase {
 
-
-    // Elements
-    @FindBy(how = How.ID, id = "username")
-    WebElement username;
-    @FindBy(how = How.ID, id = "password")
-    WebElement password;
-    @FindBy(how = How.ID, id = "btnSubmit")
-    WebElement signInButton;  // Used a more stable XPath instead of absolute path
-    @FindBy(how = How.XPATH, xpath = "/html/body/div/div/div/div")
-    WebElement alertMessage;  // Used a more stable XPath
-    @FindBy(how = How.ID, id = "details-button")
-    WebElement advancedButtonSecurity;
-    @FindBy(how = How.ID, id = "proceed-link")
-    WebElement proceed;
-    @FindBy(how = How.CLASS_NAME, className = "yzr-username")
-    WebElement yzr_username;
-
     public LoginPage(WebDriver driver) {
         super(driver);
-
     }
 
-    // Methods
-    public void openLoginPage() {
-        waitElementToDisplay(advancedButtonSecurity, 30);
-        advancedButtonSecurity.click();
+    @FindBy(how = How.ID, id = "email")
+    WebElement emailInput;
+
+    @FindBy(how = How.ID, id = "password")
+    WebElement passwordInput;
+
+    @FindBy(how = How.CLASS_NAME, className = "login-button")
+    WebElement loginButton;
+
+    // Both errors share class="error-text"
+    @FindBy(how = How.CLASS_NAME, className = "error-text")
+    List<WebElement> errorMessages;
+
+
+    public void enterEmail(String emailText) {
+        waitElementToDisplay(emailInput, 5);
+        emailInput.clear();
+        emailInput.sendKeys(emailText);
     }
 
-    public void proceedToLoginPage() {
-        waitElementToDisplay(proceed, 30);
-        proceed.click();
+    public void enterPassword(String pass) {
+        waitElementToDisplay(passwordInput, 5);
+        passwordInput.clear();
+        passwordInput.sendKeys(pass);
     }
 
-    public void login(String usernameText, String passwordText) {
-        waitElementToDisplay(username, 30);
-        waitElementToDisplay(password, 30);
-        username.sendKeys(usernameText);
-        password.sendKeys(passwordText);
-        waitElementToBeClickable(signInButton, 30);
-        signInButton.click();
-
+    public void handleAlertIfPresent() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+            alert.accept();
+        } catch (TimeoutException e) {
+            // ignore
+        }
     }
 
-    public String getInvalidLoginAlert() {
-        waitElementToBeClickable(alertMessage, 30);
-        return alertMessage.getText();
-
+    public void clickLogin() {
+        waitElementToBeClickable(loginButton, 10);
+        loginButton.click();
+        handleAlertIfPresent();
     }
 
-    public String getYzrUsername() {
-        waitElementToBeClickable(yzr_username, 30);
-        return yzr_username.getText();
+    public void login(String email, String password) {
+        enterEmail(email);
+        enterPassword(password);
+        clickLogin();
+    }
 
+    // GET ALL INVALID ERRORS
+
+    public void waitElementsToDisplay(List<WebElement> elements, int timeout) {
+        new WebDriverWait(driver, Duration.ofSeconds(timeout)).until(ExpectedConditions.visibilityOfAllElements(elements));
+    }
+
+    public String getAllErrors() {
+        waitElementsToDisplay(errorMessages, 10);
+
+        StringBuilder errors = new StringBuilder();
+        for (WebElement e : errorMessages) {
+            errors.append(e.getText()).append(" | ");
+        }
+        return errors.toString().trim();
     }
 }
-

@@ -3,7 +3,6 @@ package TestCases;
 import Pages.LoginPage;
 import Util.Browser_Initiation;
 import Util.GetScreenShot;
-import Util.PageBase;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import org.openqa.selenium.WebDriver;
@@ -13,58 +12,57 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class LoginTests extends Browser_Initiation {
-    private final String URL = "https://dashboard-yazara-uat.banknbox.com";
-    private WebDriver driver;
-    private PageBase pageBase;
-    private LoginPage loginPage;
 
-    private final String validUser = "ahmed.mossad";
-    private final String validPassword = "P@ssw0rd1";
-    private final String invalidUser = "jdlkasdad";
-    private final String invalidPassword = "jhhjfdgahjf";
+    private final String URL = "http://localhost:5173/";
+
+    private WebDriver driver;
+    private LoginPage loginPage;
+    private GetScreenShot screenshot;
 
     private static ExtentTest test;
     private static ExtentReports extent;
-    private GetScreenShot screenshot;
 
     @BeforeClass
     public void setUp() {
-        extent = new ExtentReports("ExtentReport.html", true);
-        driver = startBrowser(URL, "edge");
-        pageBase = new PageBase(driver);
-        screenshot = new GetScreenShot();
+        extent = new ExtentReports("LoginTestsReport.html", true);
+        driver = startBrowser(URL, "fire");
+
         loginPage = new LoginPage(driver);
+        screenshot = new GetScreenShot();
     }
 
     @AfterSuite
     public void tearDownSuite() {
-        if (test != null) {
+        if (test != null)
             extent.endTest(test);
-        }
+
         extent.flush();
         driver.quit();
     }
 
-    @Test
-    public void invalidLoginTest() throws Exception {
-        test = extent.startTest("Invalid User Login");
-
-        loginPage.login(invalidUser, invalidPassword);
-
-        String errorMsg = loginPage.getInvalidLoginAlert();
-        Assert.assertEquals(errorMsg, "Invalid Credentials");
-    }
+    // ===== TEST CASES =====
 
     @Test
     public void validLoginTest() throws Exception {
-        test = extent.startTest("Invalid User Login");
+        test = extent.startTest("Valid Login Test");
 
-        loginPage.login(validUser, validPassword);
+        loginPage.login("john.doe1764602728584@gmail.com", "StR0n9P@$$w0rd");
 
-        Thread.sleep(5000);
+        Thread.sleep(1500);
 
-        String username = loginPage.getYzrUsername();
-        Assert.assertEquals(username, validUser);
+        String currentUrl = driver.getCurrentUrl();
+        Assert.assertEquals(currentUrl, "http://localhost:5173/main");
     }
 
+    @Test
+    public void invalidLoginTest() throws Exception {
+        test = extent.startTest("Invalid Login - Missing Fields");
+
+        loginPage.login("", "");
+
+        String errors = loginPage.getAllErrors();
+        Assert.assertTrue(errors.contains("Email is required"));
+        Assert.assertTrue(errors.contains("Password is required"));
+
+    }
 }
