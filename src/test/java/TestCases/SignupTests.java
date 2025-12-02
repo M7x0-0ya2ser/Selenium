@@ -50,7 +50,11 @@ public class SignupTests extends Browser_Initiation {
     public void validSignupTest() throws Exception {
         test = extent.startTest("Valid Signup Test");
 
-        signupPage.signup("John", "Doe", "john.doe" + System.currentTimeMillis() + "@gmail.com", "StR0n9P@$$w0rd", "Full-time Employee");
+        String email = "Muhammad.Yasser" + System.currentTimeMillis() + "@gmail.com";
+
+        System.out.println("Generated Email: " + email);
+
+        signupPage.signup("Muhammad", "Yasser", email, "StR0n9P@$$w0rd", "Full-time Employee");
 
         Thread.sleep(1000);
 
@@ -63,7 +67,7 @@ public class SignupTests extends Browser_Initiation {
 
         test = extent.startTest("Invalid Signup - Missing Fields");
 
-        signupPage.signup("", "Doe", "wrongemailformat@test", "", "Student");
+        signupPage.signup("", "Yasser", "wrongemailformat@test", "", "Student");
 
         String alert = signupPage.getAlertMessage();
         Assert.assertTrue(alert.contains("All fields are required"));

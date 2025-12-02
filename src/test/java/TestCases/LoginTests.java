@@ -46,7 +46,7 @@ public class LoginTests extends Browser_Initiation {
     public void validLoginTest() throws Exception {
         test = extent.startTest("Valid Login Test");
 
-        loginPage.login("admin@admin.com", "StR0n9P@$$w0rd");
+        loginPage.login("Muhammad.Yasser1764664944405@gmail.com", "StR0n9P@$$w0rd");
 
         Thread.sleep(1000);
 
