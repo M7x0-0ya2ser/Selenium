@@ -6,11 +6,19 @@ import Util.Browser_Initiation;
 import Util.GetScreenShot;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
+import lombok.SneakyThrows;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
 
 public class HistoryTests extends Browser_Initiation {
 
@@ -21,13 +29,10 @@ public class HistoryTests extends Browser_Initiation {
     private HistoryPage historyPage;
     private GetScreenShot screenshot;
 
-    private static ExtentTest test;
-    private static ExtentReports extent;
 
     @BeforeClass
     public void setUp() throws Exception {
 
-        extent = new ExtentReports("HistoryTestsReport.html", true);
         driver = startBrowser(LOGIN_URL, "fire");
 
         // Login first
@@ -46,10 +51,6 @@ public class HistoryTests extends Browser_Initiation {
 
     @AfterSuite
     public void tearDownSuite() {
-        if (test != null)
-            extent.endTest(test);
-
-        extent.flush();
         driver.quit();
     }
 
@@ -57,7 +58,6 @@ public class HistoryTests extends Browser_Initiation {
 
     @Test
     public void verifyTableRowsLoaded() {
-        test = extent.startTest("Verify Transaction Rows Loaded");
 
         historyPage.selectYear("2025");
         historyPage.selectMonth("1");
@@ -69,7 +69,6 @@ public class HistoryTests extends Browser_Initiation {
 
     @Test
     public void selectYearAndMonthTest() throws Exception {
-        test = extent.startTest("Select Year & Month Test");
 
         historyPage.selectYear("2025");
         historyPage.selectMonth("1");
@@ -81,7 +80,6 @@ public class HistoryTests extends Browser_Initiation {
 
     @Test
     public void clickEditOnFirstRow() throws Exception {
-        test = extent.startTest("Click Edit Button Test");
 
         historyPage.selectYear("2025");
         historyPage.selectMonth("1");
@@ -94,7 +92,6 @@ public class HistoryTests extends Browser_Initiation {
 
     @Test
     public void clickDeleteOnFirstRow() throws Exception {
-        test = extent.startTest("Click Delete Button Test");
 
         historyPage.selectYear("2025");
         historyPage.selectMonth("1");
@@ -107,12 +104,37 @@ public class HistoryTests extends Browser_Initiation {
 
     @Test
     public void logoutTest() throws Exception {
-        test = extent.startTest("Logout Test");
 
         historyPage.logout();
         Thread.sleep(1000);
 
         String currentUrl = driver.getCurrentUrl();
         Assert.assertEquals(currentUrl, LOGIN_URL);
+    }
+
+    @SneakyThrows
+    @AfterMethod
+    public void afterMethod(Method method, ITestResult result) {
+
+        switch (result.getStatus()) {
+            case ITestResult.SUCCESS:
+                logger.log(LogStatus.PASS, "Test Passed");
+                break;
+            case ITestResult.FAILURE:
+                logger.log(LogStatus.FAIL, "Test Failed");
+                break;
+            default:
+                logger.log(LogStatus.SKIP, "Test Skipped");
+                break;
+        }
+
+        if (result.getThrowable() != null) {
+            // Capture full stack trace
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            result.getThrowable().printStackTrace(pw);
+            String fullStackTrace = sw.toString();
+            logger.log(LogStatus.ERROR, "Exception:       <pre>" + fullStackTrace + "</pre>");
+        }
     }
 }

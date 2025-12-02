@@ -6,13 +6,21 @@ import Util.GetScreenShot;
 import Util.PageBase;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
+import lombok.SneakyThrows;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.Test;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
 
 public class SignupTests extends Browser_Initiation {
 
@@ -22,13 +30,11 @@ public class SignupTests extends Browser_Initiation {
     private SignupPage signupPage;
     private GetScreenShot screenshot;
 
-    private static ExtentTest test;
-    private static ExtentReports extent;
 
     @BeforeClass
     public void setUp() {
 
-        extent = new ExtentReports("SignupTestsReport.html", true);
+//        extent = new ExtentReports("SignupTestsReport.html", true);
         driver = startBrowser(URL, "fire");
 
         signupPage = new SignupPage(driver);
@@ -37,10 +43,6 @@ public class SignupTests extends Browser_Initiation {
 
     @AfterSuite
     public void tearDownSuite() {
-        if (test != null) {
-            extent.endTest(test);
-        }
-        extent.flush();
         driver.quit();
     }
 
@@ -48,7 +50,7 @@ public class SignupTests extends Browser_Initiation {
 
     @Test
     public void validSignupTest() throws Exception {
-        test = extent.startTest("Valid Signup Test");
+//        test = extent.startTest("Valid Signup Test");
 
         String email = "Muhammad.Yasser" + System.currentTimeMillis() + "@gmail.com";
 
@@ -65,11 +67,40 @@ public class SignupTests extends Browser_Initiation {
     @Test
     public void signupMissingFieldsTest() throws Exception {
 
-        test = extent.startTest("Invalid Signup - Missing Fields");
+//        test = extent.startTest("Invalid Signup - Missing Fields");
 
         signupPage.signup("", "Yasser", "wrongemailformat@test", "", "Student");
 
         String alert = signupPage.getAlertMessage();
         Assert.assertTrue(alert.contains("All fields are required"));
+    }
+
+
+    @SneakyThrows
+    @AfterMethod
+    public void afterMethod(Method method, ITestResult result) {
+
+        switch (result.getStatus()) {
+            case ITestResult.SUCCESS:
+                logger.log(LogStatus.PASS, "Test Passed");
+                break;
+            case ITestResult.FAILURE:
+                logger.log(LogStatus.FAIL, "Test Failed");
+                break;
+            default:
+                logger.log(LogStatus.SKIP, "Test Skipped");
+                break;
+        }
+
+        if (result.getThrowable() != null) {
+            // Capture full stack trace
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            result.getThrowable().printStackTrace(pw);
+            String fullStackTrace = sw.toString();
+            logger.log(LogStatus.ERROR, "Exception:       <pre>" + fullStackTrace + "</pre>");
+        }
+
+
     }
 }

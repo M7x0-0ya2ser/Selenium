@@ -36,7 +36,7 @@ public class HomeTests extends Browser_Initiation {
 
         // Perform login first
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.login("Muhammad.Yasser1764664944405@gmail.com", "StR0n9P@$$w0rd");
+        loginPage.login("admin@admin.com", "StR0n9P@$$w0rd");
 
         Thread.sleep(1500); // wait for redirect
 
@@ -52,7 +52,6 @@ public class HomeTests extends Browser_Initiation {
 
     @Test
     public void submitIncomeTest() throws Exception {
-//        test = extent.startTest("Submit Income Test");
 
         homePage.submitIncome("2025-01-01", "10000");
         Thread.sleep(1000);
@@ -119,7 +118,6 @@ public class HomeTests extends Browser_Initiation {
                 break;
         }
 
-
         if (result.getThrowable() != null) {
             // Capture full stack trace
             StringWriter sw = new StringWriter();
@@ -128,7 +126,6 @@ public class HomeTests extends Browser_Initiation {
             String fullStackTrace = sw.toString();
             logger.log(LogStatus.ERROR, "Exception:       <pre>" + fullStackTrace + "</pre>");
         }
-
 
     }
 

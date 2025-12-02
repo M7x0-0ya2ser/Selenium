@@ -5,11 +5,19 @@ import Pages.LoginPage;
 import Util.Browser_Initiation;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
+import lombok.SneakyThrows;
 import org.testng.Assert;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.Test;
 import org.openqa.selenium.WebDriver;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
 
 public class InsightsTests extends Browser_Initiation {
 
@@ -19,12 +27,8 @@ public class InsightsTests extends Browser_Initiation {
     private WebDriver driver;
     private InsightsPage insightsPage;
 
-    private static ExtentTest test;
-    private static ExtentReports extent;
-
     @BeforeClass
     public void setUp() throws Exception {
-        extent = new ExtentReports("InsightsTestsReport.html", true);
 
         driver = startBrowser(LOGIN_URL, "fire");
 
@@ -43,12 +47,6 @@ public class InsightsTests extends Browser_Initiation {
 
     @AfterSuite
     public void tearDownSuite() {
-        //insightsPage.takeScreenshot("InsightsPage_Final");
-
-        if (test != null)
-            extent.endTest(test);
-
-        extent.flush();
         driver.quit();
     }
 
@@ -56,8 +54,6 @@ public class InsightsTests extends Browser_Initiation {
 
     @Test
     public void testSelectYearAndMonth() throws Exception {
-        test = extent.startTest("Select Year & Month Test");
-
         insightsPage.selectYear("2025");
         insightsPage.selectMonth("1");
 
@@ -72,8 +68,6 @@ public class InsightsTests extends Browser_Initiation {
 
     @Test
     public void testBackButton() throws Exception {
-        test = extent.startTest("Click Back Button");
-
         insightsPage.clickBack();
         Thread.sleep(800);
 
@@ -83,11 +77,38 @@ public class InsightsTests extends Browser_Initiation {
 
     @Test
     public void testLogout() throws Exception {
-        test = extent.startTest("Logout Test");
 
         insightsPage.logout();
         Thread.sleep(1000);
 
         Assert.assertEquals(driver.getCurrentUrl(), LOGIN_URL);
+    }
+
+    @SneakyThrows
+    @AfterMethod
+    public void afterMethod(Method method, ITestResult result) {
+
+        switch (result.getStatus()) {
+            case ITestResult.SUCCESS:
+                logger.log(LogStatus.PASS, "Test Passed");
+                break;
+            case ITestResult.FAILURE:
+                logger.log(LogStatus.FAIL, "Test Failed");
+                break;
+            default:
+                logger.log(LogStatus.SKIP, "Test Skipped");
+                break;
+        }
+
+        if (result.getThrowable() != null) {
+            // Capture full stack trace
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            result.getThrowable().printStackTrace(pw);
+            String fullStackTrace = sw.toString();
+            logger.log(LogStatus.ERROR, "Exception:       <pre>" + fullStackTrace + "</pre>");
+        }
+
+
     }
 }
