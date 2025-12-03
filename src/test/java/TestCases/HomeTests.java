@@ -11,10 +11,7 @@ import lombok.SneakyThrows;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -105,6 +102,8 @@ public class HomeTests extends Browser_Initiation {
     @SneakyThrows
     @AfterMethod
     public void afterMethod(Method method, ITestResult result) {
+
+        driver.get("http://localhost:5173/main");
 
         switch (result.getStatus()) {
             case ITestResult.SUCCESS:
