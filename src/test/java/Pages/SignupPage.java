@@ -38,31 +38,31 @@ public class SignupPage extends PageBase {
     WebElement alertMessage;
 
     public void enterFirstName(String fname) {
-        waitElementToDisplay(firstName, 3);
+        waitElementToDisplay(firstName, 2);
         firstName.clear();
         firstName.sendKeys(fname);
     }
 
     public void enterLastName(String lname) {
-        waitElementToDisplay(lastName, 3);
+        waitElementToDisplay(lastName, 2);
         lastName.clear();
         lastName.sendKeys(lname);
     }
 
     public void enterEmail(String emailText) {
-        waitElementToDisplay(email, 3);
+        waitElementToDisplay(email, 2);
         email.clear();
         email.sendKeys(emailText);
     }
 
     public void enterPassword(String pass) {
-        waitElementToDisplay(password, 3);
+        waitElementToDisplay(password, 2);
         password.clear();
         password.sendKeys(pass);
     }
 
     public void selectOccupation(String occupation) {
-        waitElementsToDisplay(occupationOptions, 3);
+        waitElementsToDisplay(occupationOptions, 2);
         for (WebElement option : occupationOptions) {
             if (option.getText().equalsIgnoreCase(occupation)) {
                 option.click();
@@ -85,14 +85,14 @@ public class SignupPage extends PageBase {
     }
 
     public void clickCreateAccount() {
-        waitElementToBeClickable(createAccountButton, 3);
+        waitElementToBeClickable(createAccountButton, 2);
         createAccountButton.click();
         handleAlertIfPresent();
     }
 
     public void handleAlertIfPresent() {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
             Alert alert = wait.until(ExpectedConditions.alertIsPresent());
             alert.accept();
         } catch (TimeoutException e) {
@@ -111,7 +111,12 @@ public class SignupPage extends PageBase {
     }
 
     public String getAlertMessage() {
-        waitElementToDisplay(alertMessage, 3);
+        waitElementToDisplay(alertMessage, 2);
         return alertMessage.getText();
+    }
+
+    public String getEmailValidationMessage() {
+        waitElementToDisplay(email, 2); // reuse your existing wait
+        return email.getAttribute("validationMessage");
     }
 }

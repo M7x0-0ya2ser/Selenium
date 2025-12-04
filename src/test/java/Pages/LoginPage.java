@@ -28,6 +28,9 @@ public class LoginPage extends PageBase {
     @FindBy(how = How.CLASS_NAME, className = "error-text")
     List<WebElement> errorMessages;
 
+    @FindBy(how = How.XPATH, xpath = "//div[contains(@class,'alert') or contains(@class,'error')]")
+    WebElement alertMessage;
+
 
     public void enterEmail(String emailText) {
         waitElementToDisplay(emailInput, 3);
@@ -75,5 +78,10 @@ public class LoginPage extends PageBase {
             errors.append(e.getText()).append(" | ");
         }
         return errors.toString().trim();
+    }
+
+    public String getAlertMessage() {
+        waitElementToDisplay(alertMessage, 2);
+        return alertMessage.getText();
     }
 }

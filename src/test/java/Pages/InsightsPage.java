@@ -5,7 +5,9 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 
 public class InsightsPage extends PageBase {
@@ -20,13 +22,13 @@ public class InsightsPage extends PageBase {
     @FindBy(how = How.XPATH, xpath = "//div[contains(@class,'date-selector')]/select[2]")
     WebElement monthDropdown;
 
-    @FindBy(how = How.XPATH, xpath = "//div[contains(text(),'Total Expenses')]/following-sibling::div")
+    @FindBy(how = How.XPATH, xpath = "//div[div[contains(text(),'Total Expenses')]]/p[@class='card-text']")
     WebElement totalExpenses;
 
     @FindBy(how = How.XPATH, xpath = "//div[contains(text(),'Top Spending Category')]/following-sibling::div")
     WebElement topSpendingCategory;
 
-    @FindBy(how = How.XPATH, xpath = "//div[contains(text(),'Total Income')]/following-sibling::div")
+    @FindBy(how = How.XPATH, xpath = "//div[div[contains(text(),'Total Income')]]/p[@class='card-text']")
     WebElement totalIncome;
 
     @FindBy(how = How.TAG_NAME, tagName = "canvas")
@@ -48,20 +50,27 @@ public class InsightsPage extends PageBase {
         new Select(monthDropdown).selectByValue(month);
     }
 
-    public String getTotalExpenses() {
-        waitElementToDisplay(totalExpenses, 3);
-        return totalExpenses.getText().trim();
-    }
-
     public String getTopCategory() {
         waitElementToDisplay(topSpendingCategory, 3);
         return topSpendingCategory.getText().trim();
     }
 
     public String getTotalIncome() {
-        waitElementToDisplay(totalIncome, 3);
-        return totalIncome.getText().trim();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebElement totalIncomeElement = wait.until(driver ->
+                driver.findElement(By.xpath("//div[div[contains(text(),'Total Income')]]/p[@class='card-text']"))
+        );
+        return totalIncomeElement.getText().replaceAll("[^0-9]", "").trim();
     }
+
+    public String getTotalExpenses() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebElement totalExpensesElement = wait.until(driver ->
+                driver.findElement(By.xpath("//div[div[contains(text(),'Total Expenses')]]/p[@class='card-text']"))
+        );
+        return totalExpensesElement.getText().replaceAll("[^0-9]", "").trim();
+    }
+
 
     public boolean isChartDisplayed() {
         waitElementToDisplay(chartCanvas, 3);

@@ -24,7 +24,7 @@ public class HistoryPage extends PageBase {
     WebElement monthDropdown;
 
     @FindBy(how = How.XPATH, xpath = "//div[@class='transaction-row' and not(contains(@class,'header-row'))]")
-    List<WebElement> transactionRows;
+    public List<WebElement> transactionRows;
 
     @FindBy(how = How.CLASS_NAME, className = "logout_button")
     WebElement logoutButton;
@@ -59,11 +59,69 @@ public class HistoryPage extends PageBase {
         editBtn.click();
     }
 
+    public void clickSaveOnRow(int index) {
+        WebElement row = transactionRows.get(index);
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(
+                row.findElement(By.xpath(".//button[contains(text(),'Save')]"))
+        ));
+
+        saveButton.click();
+    }
+
     public void clickDeleteOnRow(int index) {
         WebElement row = transactionRows.get(index);
         WebElement deleteBtn = row.findElement(By.className("delete-button"));
         waitElementToBeClickable(deleteBtn, 3);
         deleteBtn.click();
+    }
+
+    public boolean isTransactionPresent(String date, String amount) {
+        waitElementsToDisplay(transactionRows, 5); // wait until rows are visible
+        for (WebElement row : transactionRows) {
+            String rowText = row.getText();
+            if (rowText.contains(date) && rowText.contains(amount)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void editTransactionDate(int index, String newDate) {
+        WebElement row = transactionRows.get(index);
+        WebElement dateInput = row.findElement(By.name("transactionDate"));
+        waitElementToBeClickable(dateInput, 3);
+        dateInput.clear();
+        dateInput.sendKeys(newDate);
+    }
+
+    public void editAmount(int index, String newAmount) {
+        WebElement row = transactionRows.get(index);
+        WebElement amountInput = row.findElement(By.name("amount"));
+        waitElementToBeClickable(amountInput, 3);
+        amountInput.clear();
+        amountInput.sendKeys(newAmount);
+    }
+
+    public void selectCategory(int index, String categoryName) {
+        WebElement row = transactionRows.get(index);
+        WebElement categoryDropdown = row.findElement(By.name("category"));
+        waitElementToDisplay(categoryDropdown, 3);
+        new Select(categoryDropdown).selectByVisibleText(categoryName);
+    }
+
+
+    public String getUserIdText() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement userIdElement = wait.until(ExpectedConditions.presenceOfElementLocated(
+                    By.xpath("//p[contains(@class,'user-id')]")
+            ));
+            return userIdElement.getText().trim();
+        } catch (TimeoutException e) {
+            return "User ID element not found!";
+        }
     }
 
     public void logout() {

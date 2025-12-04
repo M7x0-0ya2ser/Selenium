@@ -1,6 +1,7 @@
 package TestCases;
 
 import Pages.HistoryPage;
+import Pages.HomePage;
 import Pages.LoginPage;
 import Util.Browser_Initiation;
 import Util.GetScreenShot;
@@ -19,6 +20,7 @@ import org.testng.annotations.Test;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.util.NoSuchElementException;
 
 public class HistoryTests extends Browser_Initiation {
 
@@ -29,11 +31,10 @@ public class HistoryTests extends Browser_Initiation {
     private HistoryPage historyPage;
     private GetScreenShot screenshot;
 
-
     @BeforeClass
     public void setUp() throws Exception {
 
-        driver = startBrowser(LOGIN_URL, "fire");
+        driver = startBrowser(LOGIN_URL, "edge");
 
         LoginPage loginPage = new LoginPage(driver);
         loginPage.login("admin@admin.com", "StR0n9P@$$w0rd");
@@ -80,14 +81,18 @@ public class HistoryTests extends Browser_Initiation {
 
     @Test
     public void clickEditOnFirstRow() throws Exception {
-
         historyPage.selectYear("2025");
         historyPage.selectMonth("1");
 
         historyPage.clickEditOnRow(0);
-        Thread.sleep(1200);
 
-        Assert.assertTrue(true, "Edit button clicked");
+        historyPage.editTransactionDate(0, "2025-12-05");
+        historyPage.editAmount(0, "2500");
+        historyPage.selectCategory(0, "Food");
+
+        historyPage.clickEditOnRow(0);
+
+        Assert.assertTrue(historyPage.isTransactionPresent("2025-12-05", "2500"), "Transaction updated successfully");
     }
 
     @Test
@@ -106,10 +111,18 @@ public class HistoryTests extends Browser_Initiation {
     public void logoutTest() throws Exception {
 
         historyPage.logout();
-        Thread.sleep(1000);
 
         String currentUrl = driver.getCurrentUrl();
         Assert.assertEquals(currentUrl, LOGIN_URL);
+
+        String userIdText;
+        try {
+            userIdText = historyPage.getUserIdText();
+        } catch (NoSuchElementException e) {
+            userIdText = "User ID element not found!";
+        }
+
+        Assert.assertEquals(userIdText, "User ID element not found!");
     }
 
     @SneakyThrows

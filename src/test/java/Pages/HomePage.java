@@ -48,10 +48,21 @@ public class HomePage extends PageBase {
     @FindBy(how = How.XPATH, xpath = "//button[text()='History']")
     WebElement historyButton;
 
+    @FindBy(how = How.ID, id = "incomeDate")
+    WebElement dateInput;
+
+    @FindBy(how = How.ID, id = "incomeAmount")
+    WebElement amountInput;
+
+    @FindBy(how = How.CLASS_NAME, className = "error-message")
+    WebElement errorMessage;
+
     public String getUserId() {
         waitElementToDisplay(userIdLabel, 3);
         return userIdLabel.getText();
     }
+
+
 
     public void submitIncome(String date, String amount) {
         waitElementToDisplay(incomeDate, 2);
@@ -98,4 +109,37 @@ public class HomePage extends PageBase {
             alert.accept();
         } catch (Exception ignored) {}
     }
+
+
+    public boolean isUserIdDisplayed() {
+        try {
+            waitElementToDisplay(userIdLabel, 5); // wait up to 5 seconds
+            return userIdLabel.isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public String getUserIdText() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement userIdElement = wait.until(ExpectedConditions.presenceOfElementLocated(
+                    By.xpath("//p[contains(@class,'user-id')]")
+            ));
+            return userIdElement.getText().trim();
+        } catch (TimeoutException e) {
+            return "User ID element not found!";
+        }
+    }
+
+    public String getValidationMessage(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        return (String) js.executeScript("return arguments[0].validationMessage;", element);
+    }
+
+
+    public String getErrorMessageText() {
+        return errorMessage.getText().trim();
+    }
+
 }

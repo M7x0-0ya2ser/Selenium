@@ -34,10 +34,15 @@ public class SignupTests extends Browser_Initiation {
     @BeforeClass
     public void setUp() {
 
-        driver = startBrowser(URL, "fire");
+        driver = startBrowser(URL, "edge");
 
         signupPage = new SignupPage(driver);
         screenshot = new GetScreenShot();
+    }
+
+    @BeforeMethod
+    public void openSignupPage() {
+        driver.get("http://localhost:5173/Signup");
     }
 
     @AfterSuite
@@ -127,6 +132,42 @@ public class SignupTests extends Browser_Initiation {
 
         Assert.assertTrue(alert.contains("All fields are required"));
     }
+
+    @Test
+    public void signupWithExistedEmailTest() throws Exception {
+
+        signupPage.signup("Muhammad", "Yasser", "admin@admin.com", "StR0n9P@$$w0rd", "Student");
+
+        String alert = signupPage.getAlertMessage();
+
+        Assert.assertTrue(alert.contains("Email already exists"));
+    }
+
+
+    @Test(description = "Bug Test: Signup should not succeed with a one-letter passwor")
+    public void signupWithOneLetterPassword() throws Exception {
+        String email = "Muhammad.Yasser" + System.currentTimeMillis() + "@gmail.com";
+
+
+        signupPage.signup("Muhammad", "Yasser", email, "S", "Student");
+
+        String alertMessage = signupPage.getAlertMessage();
+        Assert.assertEquals(alertMessage, "Password must be at least 8 characters");
+    }
+
+    @Test
+    public void signupInvalidEmailTest() throws Exception {
+
+        signupPage.signup("Muhammad", "Yasser", "test", "StR0n9P@$$w0rd", "Student");
+
+        signupPage.clickCreateAccount();
+
+        String validationMsg = signupPage.getEmailValidationMessage();
+
+        Assert.assertEquals(validationMsg, "Please include an '@' in the email address. 'test' is missing an '@'.");
+    }
+
+
 
 
     @SneakyThrows

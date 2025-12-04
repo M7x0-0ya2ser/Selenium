@@ -86,7 +86,7 @@ public class Browser_Initiation {
         String className = this.getClass().getSimpleName();
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
         extentReports = new ExtentReports("Reports/" + className + "_" + timeStamp + ".html");
-        extentReports.addSystemInfo("Project", "Switching_APIs");
+        extentReports.addSystemInfo("Project", "Money Tracker");
         extentReports.addSystemInfo("Author", "Muhammed Yasser");
     }
 
