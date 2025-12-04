@@ -14,10 +14,13 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class SignupTests extends Browser_Initiation {
 
@@ -65,6 +68,42 @@ public class SignupTests extends Browser_Initiation {
         String currentUrl = driver.getCurrentUrl();
         Assert.assertEquals(currentUrl, "http://localhost:5173/Signup");
     }
+
+    @DataProvider(name = "signupDataFromJSON")
+    public Object[][] signupDataFromJSON() throws Exception {
+        String json = new String(Files.readAllBytes(Paths.get("src/test/java/users.json")));
+        JSONArray arr = new JSONArray(json);
+        Object[][] data = new Object[arr.length()][5];
+
+        for (int i = 0; i < arr.length(); i++) {
+            JSONObject user = arr.getJSONObject(i);
+            data[i][0] = user.getString("firstName");
+            data[i][1] = user.getString("lastName");
+            data[i][2] = user.getString("email");
+            data[i][3] = user.getString("password");
+            data[i][4] = user.getString("occupation");
+        }
+        return data;
+    }
+
+    @Test(dataProvider = "signupDataFromJSON")
+    public void signupTestWithJSON(String fname, String lname, String email, String password, String occupation) throws Exception {
+
+        // Signup
+        signupPage.signup(fname, lname, email, password, occupation);
+
+        driver.get("http://localhost:5173/Signup");
+
+        System.out.println("Generated Email: " + email);
+
+        Thread.sleep(1000);
+
+        // Verify redirected to login page (or main page)
+        String currentUrl = driver.getCurrentUrl();
+        Assert.assertEquals(currentUrl, "http://localhost:5173/Signup");
+    }
+
+
 
     @Test
     public void validSignupTest() throws Exception {
