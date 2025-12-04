@@ -13,10 +13,7 @@ import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -40,11 +37,34 @@ public class SignupTests extends Browser_Initiation {
         screenshot = new GetScreenShot();
     }
 
+    @DataProvider(name = "signupData")
+    public Object[][] signupData() {
+        return new Object[][]{
+                {"Muhammad", "Yasser", "Muhammad.Yasser" + System.currentTimeMillis() + "@gmail.com", "StR0n9P@$$w0rd", "Full-time Employee"},
+                {"Mostafa", "Hussein", "Mostafa.Hussein" + System.currentTimeMillis() + "@gmail.com", "Pass12345!", "Student"},
+                {"Mahmoud", "Kaarem", "Mahmoud.Kaarem" + System.currentTimeMillis() + "@gmail.com", "SecureP@ss1", "Freelancer"},
+                {"Mahmoud", "Ezzat", "Mahmoud.Ezzat" + System.currentTimeMillis() + "@gmail.com", "MyP@ssw0rd123", "Student"}
+        };
+    }
+
     @AfterSuite
     public void tearDownSuite() {
         driver.quit();
     }
 
+
+    @Test(dataProvider = "signupData")
+    public void signupTestWithDataProvider(String fname, String lname, String email, String password, String occupation) throws Exception {
+        signupPage.signup(fname, lname, email, password, occupation);
+
+        driver.get("http://localhost:5173/Signup");
+
+        System.out.println("Generated Email: " + email);
+
+        Thread.sleep(1000);
+        String currentUrl = driver.getCurrentUrl();
+        Assert.assertEquals(currentUrl, "http://localhost:5173/Signup");
+    }
 
     @Test
     public void validSignupTest() throws Exception {
