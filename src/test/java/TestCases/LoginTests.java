@@ -38,8 +38,6 @@ public class LoginTests extends Browser_Initiation {
         driver.quit();
     }
 
-    // ===== TEST CASES =====
-
     @Test
     public void validLoginTest() throws Exception {
         loginPage.login("Muhammad.Yasser1764711285192@gmail.com", "StR0n9P@$$w0rd");
@@ -73,7 +71,6 @@ public class LoginTests extends Browser_Initiation {
         }
 
         if (result.getThrowable() != null) {
-            // Capture full stack trace
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             result.getThrowable().printStackTrace(pw);

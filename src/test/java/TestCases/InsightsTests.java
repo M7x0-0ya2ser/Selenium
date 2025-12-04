@@ -32,13 +32,11 @@ public class InsightsTests extends Browser_Initiation {
 
         driver = startBrowser(LOGIN_URL, "fire");
 
-        // Login
         LoginPage loginPage = new LoginPage(driver);
         loginPage.login("admin@admin.com", "StR0n9P@$$w0rd");
 
         Thread.sleep(1000);
 
-        // Navigate to Insights
         driver.get(INSIGHTS_URL);
         Thread.sleep(1200);
 
@@ -50,10 +48,10 @@ public class InsightsTests extends Browser_Initiation {
         driver.quit();
     }
 
-    // ======================= TESTS ========================
-
     @Test
     public void testSelectYearAndMonth() throws Exception {
+        driver.get(INSIGHTS_URL);
+
         insightsPage.selectYear("2025");
         insightsPage.selectMonth("1");
 
@@ -75,7 +73,7 @@ public class InsightsTests extends Browser_Initiation {
         Assert.assertEquals(currentUrl , "http://localhost:5173/main");
     }
 
-    @Test
+    @Test(priority = 99)
     public void testLogout() throws Exception {
 
         insightsPage.logout();
@@ -101,7 +99,6 @@ public class InsightsTests extends Browser_Initiation {
         }
 
         if (result.getThrowable() != null) {
-            // Capture full stack trace
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             result.getThrowable().printStackTrace(pw);

@@ -25,7 +25,6 @@ public class LoginPage extends PageBase {
     @FindBy(how = How.CLASS_NAME, className = "login-button")
     WebElement loginButton;
 
-    // Both errors share class="error-text"
     @FindBy(how = How.CLASS_NAME, className = "error-text")
     List<WebElement> errorMessages;
 
@@ -48,7 +47,6 @@ public class LoginPage extends PageBase {
             Alert alert = wait.until(ExpectedConditions.alertIsPresent());
             alert.accept();
         } catch (TimeoutException e) {
-            // ignore
         }
     }
 
@@ -64,7 +62,6 @@ public class LoginPage extends PageBase {
         clickLogin();
     }
 
-    // GET ALL INVALID ERRORS
 
     public void waitElementsToDisplay(List<WebElement> elements, int timeout) {
         new WebDriverWait(driver, Duration.ofSeconds(timeout)).until(ExpectedConditions.visibilityOfAllElements(elements));

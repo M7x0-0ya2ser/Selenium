@@ -29,7 +29,6 @@ public class HistoryPage extends PageBase {
     @FindBy(how = How.CLASS_NAME, className = "logout_button")
     WebElement logoutButton;
 
-    // ========================= METHODS =========================
 
     public void selectYear(String year) {
         waitElementToDisplay(yearDropdown, 3);

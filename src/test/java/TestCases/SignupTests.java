@@ -34,7 +34,6 @@ public class SignupTests extends Browser_Initiation {
     @BeforeClass
     public void setUp() {
 
-//        extent = new ExtentReports("SignupTestsReport.html", true);
         driver = startBrowser(URL, "fire");
 
         signupPage = new SignupPage(driver);
@@ -46,11 +45,9 @@ public class SignupTests extends Browser_Initiation {
         driver.quit();
     }
 
-    // Test Cases
 
     @Test
     public void validSignupTest() throws Exception {
-//        test = extent.startTest("Valid Signup Test");
 
         String email = "Muhammad.Yasser" + System.currentTimeMillis() + "@gmail.com";
 
@@ -67,11 +64,10 @@ public class SignupTests extends Browser_Initiation {
     @Test
     public void signupMissingFieldsTest() throws Exception {
 
-//        test = extent.startTest("Invalid Signup - Missing Fields");
-
         signupPage.signup("", "Yasser", "wrongemailformat@test", "", "Student");
 
         String alert = signupPage.getAlertMessage();
+
         Assert.assertTrue(alert.contains("All fields are required"));
     }
 

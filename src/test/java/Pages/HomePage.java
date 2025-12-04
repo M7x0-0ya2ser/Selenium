@@ -54,7 +54,7 @@ public class HomePage extends PageBase {
     }
 
     public void submitIncome(String date, String amount) {
-        waitElementToDisplay(incomeDate, 3);
+        waitElementToDisplay(incomeDate, 2);
         incomeDate.sendKeys(date);
         incomeAmount.sendKeys(amount);
         incomeSubmit.click();

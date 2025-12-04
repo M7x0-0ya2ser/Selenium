@@ -28,16 +28,13 @@ public class HomeTests extends Browser_Initiation {
 
     @BeforeClass
     public void setUp() throws InterruptedException {
-        // Start browser at login page
         driver = startBrowser("http://localhost:5173/", "fire");
 
-        // Perform login first
         LoginPage loginPage = new LoginPage(driver);
         loginPage.login("admin@admin.com", "StR0n9P@$$w0rd");
 
         Thread.sleep(1500); // wait for redirect
 
-        // Now you are authenticated
         homePage = new HomePage(driver);
         screenshot = new GetScreenShot();
     }
@@ -58,7 +55,6 @@ public class HomeTests extends Browser_Initiation {
 
     @Test
     public void submitExpenseTest() throws Exception {
-//        test = extent.startTest("Submit Expense Test");
 
         homePage.submitExpense("2025-01-03", "1000", "Transportation");
         Thread.sleep(1000);
@@ -68,7 +64,6 @@ public class HomeTests extends Browser_Initiation {
 
     @Test
     public void openInsights() throws Exception {
-//        test = extent.startTest("Open Insights Test");
 
         homePage.clickInsights();
         Thread.sleep(1000);
@@ -78,7 +73,6 @@ public class HomeTests extends Browser_Initiation {
 
     @Test
     public void historyNavigationTest() throws Exception {
-//        test = extent.startTest("History Navigation Test");
 
         homePage.goToHistory();
         Thread.sleep(1000);
@@ -87,9 +81,8 @@ public class HomeTests extends Browser_Initiation {
         Assert.assertTrue(currentUrl.contains("history"));
     }
 
-    @Test
+    @Test(priority = 99)
     public void logoutTest() throws Exception {
-//        test = extent.startTest("Logout Test");
 
         homePage.logout();
         Thread.sleep(1000);
