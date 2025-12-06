@@ -52,13 +52,11 @@ public class PageBase {
 
     public void takeScreenshot(String baseName) {
         try {
-            // Get today's date in yyyyMMdd format
-            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-            // Construct file name
+            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            
             String fileName = baseName.replaceAll("\\s+", "") + "_" + date + ".png"; // remove spaces
 
-            // For Firefox full page screenshot
             File screenshot = ((FirefoxDriver) driver).getFullPageScreenshotAs(OutputType.FILE);
 
             File outputFile = new File("./Screenshots/" + fileName);
@@ -70,8 +68,6 @@ public class PageBase {
             System.out.println("Error taking full page screenshot: " + e.getMessage());
         }
     }
-
-
 
     public Alert switchToAlert() {
         return driver.switchTo().alert();

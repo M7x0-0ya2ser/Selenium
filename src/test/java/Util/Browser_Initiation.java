@@ -28,7 +28,7 @@ public class Browser_Initiation {
 
     public static WebDriver startBrowser(String url, String browserName) {
         WebDriver driver = null;
-        String projectPath = System.getProperty("user.dir"); // Get dynamic project path
+        String projectPath = System.getProperty("user.dir");
 
         try {
             if (browserName.toLowerCase().contains("chr")) {
@@ -51,7 +51,7 @@ public class Browser_Initiation {
                 EdgeOptions options = new EdgeOptions();
                 driver = new EdgeDriver(options);
             } else {
-                System.out.println("❌ Unsupported browser: " + browserName);
+                System.out.println("Unsupported browser: " + browserName);
                 return null;
             }
 
@@ -62,7 +62,7 @@ public class Browser_Initiation {
             }
 
         } catch (Exception e) {
-            System.out.println("❌ Error initializing browser: " + e.getMessage());
+            System.out.println("Error initializing browser: " + e.getMessage());
         }
         return driver;
     }

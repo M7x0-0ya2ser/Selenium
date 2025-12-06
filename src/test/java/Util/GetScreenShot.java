@@ -14,20 +14,16 @@ public class GetScreenShot {
 
     public String capture(WebDriver driver, String screenShotName) {
         try {
-            // Ensure screenshots directory exists
             String screenshotDir = System.getProperty("user.dir") + File.separator + "Screenshots";
             Files.createDirectories(Paths.get(screenshotDir));
-
-            // Capture the screenshot
             TakesScreenshot ts = (TakesScreenshot) driver;
             File source = ts.getScreenshotAs(OutputType.FILE);
             String dest = screenshotDir + File.separator + screenShotName + ".png";
             File destination = new File(dest);
             FileUtils.copyFile(source, destination);
-
-            return dest; // Return file path for reference
+            return dest;
         } catch (IOException e) {
-            System.err.println("❌ Error capturing screenshot: " + e.getMessage());
+            System.err.println("Error capturing screenshot: " + e.getMessage());
             return null;
         }
     }

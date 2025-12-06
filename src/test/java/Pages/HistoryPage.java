@@ -33,13 +33,13 @@ public class HistoryPage extends PageBase {
     public void selectYear(String year) {
         waitElementToDisplay(yearDropdown, 3);
         Select select = new Select(yearDropdown);
-        select.selectByValue(year);    // "2025"
+        select.selectByValue(year);
     }
 
     public void selectMonth(String month) {
         waitElementToDisplay(monthDropdown, 3);
         Select select = new Select(monthDropdown);
-        select.selectByValue(month);   // "1"
+        select.selectByValue(month);
     }
 
     public void waitElementsToDisplay(List<WebElement> elements, int timeout) {

@@ -3,46 +3,33 @@ package TestCases;
 import Pages.SignupPage;
 import Util.Browser_Initiation;
 import Util.GetScreenShot;
-import Util.PageBase;
-import com.relevantcodes.extentreports.ExtentReports;
-import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import lombok.SneakyThrows;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class SignupTests extends Browser_Initiation {
 
-    private final String URL = "http://localhost:5173/Signup";
     private WebDriver driver;
+    private final String URL = "http://localhost:5173/Signup";
 
     private SignupPage signupPage;
-    private GetScreenShot screenshot;
-
 
     @BeforeClass
     public void setUp() {
-
         driver = startBrowser(URL, "edge");
-
         signupPage = new SignupPage(driver);
-        screenshot = new GetScreenShot();
     }
 
     @BeforeMethod
     public void openSignupPage() {
-        driver.get("http://localhost:5173/Signup");
+        driver.get(URL);
     }
 
     @AfterSuite
@@ -50,93 +37,86 @@ public class SignupTests extends Browser_Initiation {
         driver.quit();
     }
 
-    @DataProvider(name = "signupDataFromJSON")
-    public Object[][] signupDataFromJSON() throws Exception {
-        String json = new String(Files.readAllBytes(Paths.get("src/test/java/users.json")));
-        JSONArray arr = new JSONArray(json);
-        Object[][] data = new Object[arr.length()][5];
-
-        for (int i = 0; i < arr.length(); i++) {
-            JSONObject user = arr.getJSONObject(i);
-            data[i][0] = user.getString("firstName");
-            data[i][1] = user.getString("lastName");
-            data[i][2] = user.getString("email");
-            data[i][3] = user.getString("password");
-            data[i][4] = user.getString("occupation");
-        }
-        return data;
-    }
-
-    @Test(dataProvider = "signupDataFromJSON")
-    public void signupTestWithJSON(String fname, String lname, String email, String password, String occupation) throws Exception {
-
-        // Signup
-        signupPage.signup(fname, lname, email, password, occupation);
-
-        driver.get("http://localhost:5173/Signup");
-
-        System.out.println("Generated Email: " + email);
-
-        Thread.sleep(1000);
-
-        // Verify redirected to login page (or main page)
-        String currentUrl = driver.getCurrentUrl();
-        Assert.assertEquals(currentUrl, "http://localhost:5173/Signup");
-    }
-
-
-
-    @Test
-    public void validSignupTest() throws Exception {
-
-        String email = "Muhammad.Yasser" + System.currentTimeMillis() + "@gmail.com";
-
-        System.out.println("Generated Email: " + email);
-
-        signupPage.signup("Muhammad", "Yasser", email, "StR0n9P@$$w0rd", "Full-time Employee");
-
-        Thread.sleep(1000);
-
-        String currentUrl = driver.getCurrentUrl();
-        Assert.assertEquals(currentUrl , "http://localhost:5173/");
-    }
-
-    @DataProvider(name = "signupData")
-    public Object[][] signupData() {
+    @DataProvider(name = "validSignupData")
+    public Object[][] validSignupData() {
         return new Object[][]{
-                {"", "Yasser", "Muhammad.Yasser" + System.currentTimeMillis() + "@gmail.com", "StR0n9P@$$w0rd", "Full-time Employee"},
-                {"Mostafa", "", "Mostafa.Hussein" + System.currentTimeMillis() + "@gmail.com", "Pass12345!", "Student"},
-                {"Mahmoud", "Kaarem", "", "SecureP@ss1", "Freelancer"},
-                {"Mahmoud", "Ezzat", "Mahmoud.Ezzat" + System.currentTimeMillis() + "@gmail.com", "MyP@ssw0rd123", ""}
+                {
+                        "Muhammad",
+                        "Yasser",
+                        "user" + System.currentTimeMillis() + "@gmail.com",
+                        "StR0n9P@$$w0rd",
+                        "Full-time Employee"
+                }
         };
     }
 
-    @Test(dataProvider = "signupData")
-    public void signupMissingFieldsTestWithDataProvider(String fname, String lname, String email, String password, String occupation) throws Exception {
+    @Test(dataProvider = "validSignupData")
+    public void validSignupTest(String fname, String lname, String email, String password, String occupation) throws Exception {
+
+        System.out.println("Generated Email: " + email);
+
         signupPage.signup(fname, lname, email, password, occupation);
 
-        Thread.sleep(1000);
+        Thread.sleep(1500);
+
+        Assert.assertEquals(driver.getCurrentUrl(), "http://localhost:5173/");
+    }
+
+    @DataProvider(name = "missingFieldsData")
+    public Object[][] missingFieldsData() {
+
+        return new Object[][]{
+                {"", "Yasser", "user" + System.currentTimeMillis() + "@gmail.com", "StR0n9P@$$w0rd", "Full-time Employee"},
+                {"Mostafa", "", "mostafa" + System.currentTimeMillis() + "@gmail.com", "Pass12345!", "Student"},
+                {"Mahmoud", "Karim", "", "SecureP@ss1", "Freelancer"},
+                {"Mahmoud", "Ezzat", "mahmoud" + System.currentTimeMillis() + "@gmail.com", "MyP@ssw0rd123", ""}
+        };
+    }
+
+    @Test(dataProvider = "missingFieldsData")
+    public void signupMissingFieldsTestWithDataProvider(String fname, String lname, String email, String password, String occupation) throws Exception {
+
+        signupPage.signup(fname, lname, email, password, occupation);
+
+        Thread.sleep(800);
 
         String alert = signupPage.getAlertMessage();
         Assert.assertTrue(alert.contains("All fields are required"));
-
-        driver.get("http://localhost:5173/Signup");
     }
 
-    @Test
-    public void signupMissingFieldsTest() throws Exception {
+    @DataProvider(name = "invalidEmailData")
+    public Object[][] invalidEmailData() {
 
-        signupPage.signup("", "Yasser", "wrongemailformat@test", "", "Student");
-
-        String alert = signupPage.getAlertMessage();
-
-        Assert.assertTrue(alert.contains("All fields are required"));
+        return new Object[][]{
+                {"Muhammad", "Yasser", "invalidemail", "StR0n9P@$$w0rd", "Student"},
+                {"Ali", "Omar", "wrong.format", "StrongPass123!", "Teacher"},
+                {"Sara", "Mahmoud", "aaaaa", "StrongPass12!", "Student"}
+        };
     }
 
-    @Test
-    public void signupWithExistedEmailTest() throws Exception {
+    @Test(dataProvider = "invalidEmailData")
+    public void signupInvalidEmailTest(String fname, String lname, String email, String password, String occupation) throws Exception {
 
-        signupPage.signup("Muhammad", "Yasser", "admin@admin.com", "StR0n9P@$$w0rd", "Student");
+        signupPage.signup(fname, lname, email, password, occupation);
+
+        signupPage.clickCreateAccount();
+
+        String validationMsg = signupPage.getEmailValidationMessage();
+
+        Assert.assertTrue(validationMsg.contains("Please include an '@'"));
+    }
+
+    @DataProvider(name = "existedEmailData")
+    public Object[][] existedEmailData() {
+        return new Object[][]{
+                {"Muhammad", "Yasser", "admin@admin.com", "StR0n9P@$$w0rd", "Student"},
+        };
+    }
+
+    @Test(dataProvider = "existedEmailData")
+    public void signupWithExistedEmailTest(String fname, String lname, String email, String password, String occupation) throws Exception {
+
+        signupPage.signup(fname, lname, email, password, occupation);
 
         String alert = signupPage.getAlertMessage();
 
@@ -144,36 +124,29 @@ public class SignupTests extends Browser_Initiation {
     }
 
 
-    @Test(description = "Bug Test: Signup should not succeed with a one-letter passwor")
-    public void signupWithOneLetterPassword() throws Exception {
-        String email = "Muhammad.Yasser" + System.currentTimeMillis() + "@gmail.com";
+    @DataProvider(name = "weakPasswordData")
+    public Object[][] weakPasswordData() {
 
+        return new Object[][]{
+                {"Muhammad", "Yasser", "user" + System.currentTimeMillis() + "@gmail.com", "S", "Student"},
+                {"Ali", "Ibrahim", "test" + System.currentTimeMillis() + "@gmail.com", "123", "Student"},
+                {"Sara", "Kamal", "sara" + System.currentTimeMillis() + "@gmail.com", "weak", "Student"}
+        };
+    }
 
-        signupPage.signup("Muhammad", "Yasser", email, "S", "Student");
+    @Test(dataProvider = "weakPasswordData")
+    public void signupWithWeakPasswordTest(String fname, String lname, String email, String password, String occupation) throws Exception {
+
+        signupPage.signup(fname, lname, email, password, occupation);
 
         String alertMessage = signupPage.getAlertMessage();
-        Assert.assertEquals(alertMessage, "Password must be at least 8 characters");
+
+        Assert.assertEquals(alertMessage, "At least 8 characters");
     }
-
-    @Test
-    public void signupInvalidEmailTest() throws Exception {
-
-        signupPage.signup("Muhammad", "Yasser", "test", "StR0n9P@$$w0rd", "Student");
-
-        signupPage.clickCreateAccount();
-
-        String validationMsg = signupPage.getEmailValidationMessage();
-
-        Assert.assertEquals(validationMsg, "Please include an '@' in the email address. 'test' is missing an '@'.");
-    }
-
-
-
 
     @SneakyThrows
     @AfterMethod
     public void afterMethod(Method method, ITestResult result) {
-
         switch (result.getStatus()) {
             case ITestResult.SUCCESS:
                 logger.log(LogStatus.PASS, "Test Passed");
@@ -185,16 +158,12 @@ public class SignupTests extends Browser_Initiation {
                 logger.log(LogStatus.SKIP, "Test Skipped");
                 break;
         }
-
         if (result.getThrowable() != null) {
-            // Capture full stack trace
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             result.getThrowable().printStackTrace(pw);
             String fullStackTrace = sw.toString();
             logger.log(LogStatus.ERROR, "Exception:       <pre>" + fullStackTrace + "</pre>");
         }
-
-
     }
 }

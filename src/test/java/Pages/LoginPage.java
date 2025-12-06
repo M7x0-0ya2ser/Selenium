@@ -44,6 +44,21 @@ public class LoginPage extends PageBase {
         passwordInput.sendKeys(pass);
     }
 
+    public void clearEmailField() {
+        waitElementToDisplay(emailInput, 2);
+        emailInput.clear();
+    }
+
+    public void clearPasswordField() {
+        waitElementToDisplay(passwordInput, 2);
+        passwordInput.clear();
+    }
+
+    public void clearAllFields() {
+        clearEmailField();
+        clearPasswordField();
+    }
+
     public void handleAlertIfPresent() {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
@@ -60,6 +75,7 @@ public class LoginPage extends PageBase {
     }
 
     public void login(String email, String password) {
+
         enterEmail(email);
         enterPassword(password);
         clickLogin();
