@@ -10,10 +10,7 @@ import com.relevantcodes.extentreports.LogStatus;
 import lombok.SneakyThrows;
 import org.testng.Assert;
 import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import org.openqa.selenium.WebDriver;
 
 import java.io.PrintWriter;
@@ -50,11 +47,18 @@ public class InsightsTests extends Browser_Initiation {
         driver.quit();
     }
 
-    @Test
-    public void testSelectYearAndMonth() throws Exception {
+    @DataProvider(name = "editData")
+    public Object[][] editData() {
+        return new Object[][]{
+                {"2025", "1"}
+        };
+    }
+
+    @Test(dataProvider = "editData")
+    public void testSelectYearAndMonth(String year, String month) throws Exception {
         driver.get(INSIGHTS_URL);
-        insightsPage.selectYear("2025");
-        insightsPage.selectMonth("12");
+        insightsPage.selectYear(year);
+        insightsPage.selectMonth(month);
         Thread.sleep(1000);
         String currentUrl = driver.getCurrentUrl();
         Assert.assertEquals(currentUrl , INSIGHTS_URL);
