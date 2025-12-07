@@ -3,6 +3,7 @@ package TestCases;
 import Pages.InsightsPage;
 import Pages.LoginPage;
 import Util.Browser_Initiation;
+import Util.GetScreenShot;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
@@ -23,7 +24,7 @@ public class InsightsTests extends Browser_Initiation {
 
     private final String LOGIN_URL = "http://localhost:5173/";
     private final String INSIGHTS_URL = "http://localhost:5173/insights";
-
+    private GetScreenShot screenshot;
     private WebDriver driver;
     private InsightsPage insightsPage;
 
@@ -39,7 +40,7 @@ public class InsightsTests extends Browser_Initiation {
 
         driver.get(INSIGHTS_URL);
         Thread.sleep(1200);
-
+        screenshot = new GetScreenShot();
         insightsPage = new InsightsPage(driver);
     }
 
@@ -51,15 +52,11 @@ public class InsightsTests extends Browser_Initiation {
     @Test
     public void testSelectYearAndMonth() throws Exception {
         driver.get(INSIGHTS_URL);
-
         insightsPage.selectYear("2025");
-        insightsPage.selectMonth("1");
-
+        insightsPage.selectMonth("12");
         Thread.sleep(1000);
-
         String currentUrl = driver.getCurrentUrl();
-        Assert.assertEquals(currentUrl , "http://localhost:5173/insights");
-
+        Assert.assertEquals(currentUrl , INSIGHTS_URL);
         insightsPage.takeScreenshot("Summary & Insights");
     }
 

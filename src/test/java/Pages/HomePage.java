@@ -57,11 +57,6 @@ public class HomePage extends PageBase {
     @FindBy(how = How.CLASS_NAME, className = "error-message")
     WebElement errorMessage;
 
-    public String getUserId() {
-        waitElementToDisplay(userIdLabel, 3);
-        return userIdLabel.getText();
-    }
-
 
 
     public void submitIncome(String date, String amount) {
@@ -137,9 +132,5 @@ public class HomePage extends PageBase {
         return (String) js.executeScript("return arguments[0].validationMessage;", element);
     }
 
-
-    public String getErrorMessageText() {
-        return errorMessage.getText().trim();
-    }
 
 }

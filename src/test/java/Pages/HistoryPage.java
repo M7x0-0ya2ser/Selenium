@@ -59,17 +59,6 @@ public class HistoryPage extends PageBase {
         editBtn.click();
     }
 
-    public void clickSaveOnRow(int index) {
-        WebElement row = transactionRows.get(index);
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(
-                row.findElement(By.xpath(".//button[contains(text(),'Save')]"))
-        ));
-
-        saveButton.click();
-    }
-
     public void clickDeleteOnRow(int index) {
         WebElement row = transactionRows.get(index);
         WebElement deleteBtn = row.findElement(By.className("delete-button"));

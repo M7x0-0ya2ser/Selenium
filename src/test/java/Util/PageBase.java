@@ -30,10 +30,6 @@ public class PageBase {
         this.js = (JavascriptExecutor) driver;
     }
 
-    protected void handleVerticalScroll(int pixels) {
-        js.executeScript("window.scrollBy(0, arguments[0]);", pixels);
-    }
-
     public void waitElementToDisplay(WebElement element, int timeInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeInSeconds));
         wait.until(ExpectedConditions.visibilityOf(element));
@@ -44,32 +40,9 @@ public class PageBase {
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
-    public void switchToLastTab() {
-        Set<String> windowHandles = driver.getWindowHandles();
-        List<String> handlesList = new ArrayList<>(windowHandles);
-        driver.switchTo().window(handlesList.get(handlesList.size() - 1));
-    }
-
     public void takeScreenshot(String baseName) {
-        try {
-
-            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-            
-            String fileName = baseName.replaceAll("\\s+", "") + "_" + date + ".png"; // remove spaces
-
-            File screenshot = ((FirefoxDriver) driver).getFullPageScreenshotAs(OutputType.FILE);
-
-            File outputFile = new File("./Screenshots/" + fileName);
-            FileUtils.copyFile(screenshot, outputFile);
-
-            System.out.println("Full page screenshot saved: " + outputFile.getAbsolutePath());
-
-        } catch (Exception e) {
-            System.out.println("Error taking full page screenshot: " + e.getMessage());
-        }
+        GetScreenShot gs = new GetScreenShot();
+        gs.capture(driver, baseName);
     }
 
-    public Alert switchToAlert() {
-        return driver.switchTo().alert();
-    }
 }

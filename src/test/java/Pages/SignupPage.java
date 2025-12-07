@@ -75,15 +75,6 @@ public class SignupPage extends PageBase {
         new WebDriverWait(driver, Duration.ofSeconds(timeout)).until(ExpectedConditions.visibilityOfAllElements(elements));
     }
 
-    public void acceptAlertIfPresent() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            System.out.println("Alert: " + alert.getText());
-            alert.accept();
-        } catch (NoAlertPresentException e) {
-        }
-    }
-
     public void clickCreateAccount() {
         waitElementToBeClickable(createAccountButton, 2);
         createAccountButton.click();
