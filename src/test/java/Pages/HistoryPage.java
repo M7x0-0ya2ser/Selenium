@@ -67,10 +67,10 @@ public class HistoryPage extends PageBase {
     }
 
     public boolean isTransactionPresent(String date, String amount) {
-        waitElementsToDisplay(transactionRows, 5); // wait until rows are visible
-        for (WebElement row : transactionRows) {
-            String rowText = row.getText();
-            if (rowText.contains(date) && rowText.contains(amount)) {
+        waitElementsToDisplay(transactionRows, 5);
+        List<WebElement> rows =  driver.findElements((By) transactionRows);
+        for (WebElement row : rows) {
+            if (row.getText().contains(date) && row.getText().contains(amount)) {
                 return true;
             }
         }

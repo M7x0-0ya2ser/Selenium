@@ -43,7 +43,7 @@ public class SignupTests extends Browser_Initiation {
                 {
                         "Muhammad",
                         "Yasser",
-                        "user" + System.currentTimeMillis() + "@gmail.com",
+                        "Muhammad" + System.currentTimeMillis() + "@gmail.com",
                         "StR0n9P@$$w0rd",
                         "Full-time Employee"
                 }

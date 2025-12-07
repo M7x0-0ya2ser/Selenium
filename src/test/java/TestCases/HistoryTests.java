@@ -12,10 +12,7 @@ import lombok.SneakyThrows;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -54,57 +51,77 @@ public class HistoryTests extends Browser_Initiation {
     }
 
 
-    @Test
-    public void verifyTableRowsLoaded() {
+    @DataProvider(name = "selectData")
+    public Object[][] selectData() {
+        return new Object[][]{
+                {"2025", "1"}
+        };
+    }
+
+    @Test(dataProvider = "selectData")
+    public void verifyTableRowsLoaded(String year, String month) {
 
         driver.get(HISTORY_URL);
 
-        historyPage.selectYear("2025");
-        historyPage.selectMonth("1");
+        historyPage.selectYear(year);
+        historyPage.selectMonth(month);
 
         int rows = historyPage.getTransactionCount();
         Assert.assertTrue(rows > 0);
     }
 
+    @DataProvider(name = "editData")
+    public Object[][] editData() {
+        return new Object[][]{
+                {"2025", "1", "2025-12-05", "2500", "Food" }
+        };
+    }
 
-    @Test
-    public void selectYearAndMonthTest() throws Exception {
+    @Test(dataProvider = "selectData")
+    public void selectYearAndMonthTest(String year, String month) throws Exception {
         driver.get(HISTORY_URL);
 
-        historyPage.selectYear("2025");
-        historyPage.selectMonth("1");
+        historyPage.selectYear(year);
+        historyPage.selectMonth(month);
 
         Thread.sleep(1000);
 
-        Assert.assertTrue(true);
+        int rowCount = historyPage.getTransactionCount();
+        Assert.assertTrue(rowCount > 0, "No rows were loaded after selecting year and month");
     }
 
-    @Test
-    public void clickEditOnFirstRow() throws Exception {
-        historyPage.selectYear("2025");
-        historyPage.selectMonth("1");
+    @Test(dataProvider = "editData")
+    public void clickEditOnFirstRow(String year, String month, String date, String amount, String category) throws Exception {
+        historyPage.selectYear(year);
+        historyPage.selectMonth(month);
 
         historyPage.clickEditOnRow(0);
 
-        historyPage.editTransactionDate(0, "2025-12-05");
-        historyPage.editAmount(0, "2500");
-        historyPage.selectCategory(0, "Food");
+        historyPage.editTransactionDate(0, date);
+        historyPage.editAmount(0, amount);
+        historyPage.selectCategory(0, category);
 
         historyPage.clickEditOnRow(0);
 
-        Assert.assertTrue(historyPage.isTransactionPresent("2025-12-05", "2500"), "Transaction updated successfully");
+        Assert.assertTrue(historyPage.isTransactionPresent(date, amount), "Transaction updated successfully");
     }
 
-    @Test
-    public void clickDeleteOnFirstRow() throws Exception {
+    @Test(dataProvider = "selectData")
+    public void clickDeleteOnFirstRow(String year, String month) throws Exception {
 
-        historyPage.selectYear("2025");
-        historyPage.selectMonth("1");
+        historyPage.selectYear(year);
+        historyPage.selectMonth(month);
+
+        Thread.sleep(1000);
+
+        int beforeCount = historyPage.getTransactionCount();
 
         historyPage.clickDeleteOnRow(0);
-        Thread.sleep(1200);
+        Thread.sleep(1500);
 
-        Assert.assertTrue(true, "Delete button clicked");
+        int afterCount = historyPage.getTransactionCount();
+
+        Assert.assertTrue(afterCount < beforeCount, "Row was NOT deleted. Before = " + beforeCount + ", After = " + afterCount);
     }
 
     @Test(priority = 99)

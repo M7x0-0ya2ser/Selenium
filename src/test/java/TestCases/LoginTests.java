@@ -41,7 +41,7 @@ public class LoginTests extends Browser_Initiation {
     public Object[][] validLoginData() {
         return new Object[][]{
                 {
-                        "Muhammmad" + System.currentTimeMillis() + "@gmail.com",
+                        "admin@admin.com",
                         "StR0n9P@$$w0rd"
                 }
         };
@@ -49,13 +49,11 @@ public class LoginTests extends Browser_Initiation {
 
     @Test(dataProvider = "validLoginData")
     public void validLoginTest(String email, String password) throws Exception {
-        System.out.println("Generated Email For Test: " + email);
-
         loginPage.login(email, password);
 
         Thread.sleep(1000);
 
-        Assert.assertEquals(driver.getCurrentUrl(), URL);
+        Assert.assertEquals(driver.getCurrentUrl(), "http://localhost:5173/main");
     }
 
     @DataProvider(name = "missingLoginData")
