@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.BnB</groupId>
-    <artifactId>Template_Selenium</artifactId>
+    <artifactId>Selenium</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Template_Selenium</name>
     <description>Demo project for Selenium</description>
