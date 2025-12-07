@@ -55,7 +55,7 @@ public class LoginTests extends Browser_Initiation {
 
         Thread.sleep(1000);
 
-        Assert.assertEquals(driver.getCurrentUrl(), "http://localhost:5173/");
+        Assert.assertEquals(driver.getCurrentUrl(), URL);
     }
 
     @DataProvider(name = "missingLoginData")

@@ -24,6 +24,7 @@ public class InsightsTests extends Browser_Initiation {
 
     private final String LOGIN_URL = "http://localhost:5173/";
     private final String INSIGHTS_URL = "http://localhost:5173/insights";
+    private final String HOME_URL = "http://localhost:5173/main";
     private GetScreenShot screenshot;
     private WebDriver driver;
     private InsightsPage insightsPage;
@@ -67,7 +68,7 @@ public class InsightsTests extends Browser_Initiation {
         Thread.sleep(800);
 
         String currentUrl = driver.getCurrentUrl();
-        Assert.assertEquals(currentUrl , "http://localhost:5173/main");
+        Assert.assertEquals(currentUrl , HOME_URL);
     }
 
     @Test(priority = 99)

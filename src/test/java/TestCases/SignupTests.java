@@ -18,7 +18,7 @@ public class SignupTests extends Browser_Initiation {
 
     private WebDriver driver;
     private final String URL = "http://localhost:5173/Signup";
-
+    private final String Login_URL = "http://localhost:5173/";
     private SignupPage signupPage;
 
     @BeforeClass
@@ -59,7 +59,7 @@ public class SignupTests extends Browser_Initiation {
 
         Thread.sleep(1500);
 
-        Assert.assertEquals(driver.getCurrentUrl(), "http://localhost:5173/");
+        Assert.assertEquals(driver.getCurrentUrl(), Login_URL);
     }
 
     @DataProvider(name = "missingFieldsData")
@@ -134,7 +134,7 @@ public class SignupTests extends Browser_Initiation {
         };
     }
 
-    @Test(dataProvider = "weakPasswordData")
+    @Test(dataProvider = "weakPasswordData", description = "BUG")
     public void signupWithWeakPasswordTest(String fname, String lname, String email, String password, String occupation) throws Exception {
 
         signupPage.signup(fname, lname, email, password, occupation);

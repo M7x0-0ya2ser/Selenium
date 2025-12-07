@@ -15,15 +15,14 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
-
 import java.io.*;
 import java.lang.reflect.Method;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
 public class HomeTests extends Browser_Initiation {
-
-    private final String URL = "http://localhost:5173/main";
+    private final String HOME_URL = "http://localhost:5173/main";
+    private final String Login_URL = "http://localhost:5173/";
     private WebDriver driver;
 
     private HomePage homePage;
@@ -32,7 +31,7 @@ public class HomeTests extends Browser_Initiation {
 
     @BeforeClass
     public void setUp() throws InterruptedException {
-        driver = startBrowser("http://localhost:5173/", "edge");
+        driver = startBrowser(Login_URL, "edge");
 
         LoginPage loginPage = new LoginPage(driver);
         loginPage.login("admin@admin.com", "StR0n9P@$$w0rd");
@@ -172,7 +171,7 @@ public class HomeTests extends Browser_Initiation {
         homePage.logout();
 
         String currentUrl = driver.getCurrentUrl();
-        Assert.assertEquals(currentUrl, "http://localhost:5173/");
+        Assert.assertEquals(currentUrl, Login_URL);
 
         String userIdText;
         try {
@@ -189,7 +188,7 @@ public class HomeTests extends Browser_Initiation {
     @AfterMethod
     public void afterMethod(Method method, ITestResult result) {
 
-        driver.get("http://localhost:5173/main");
+        driver.get(HOME_URL);
 
         switch (result.getStatus()) {
             case ITestResult.SUCCESS:
