@@ -61,52 +61,54 @@ public class HomeTests extends Browser_Initiation {
     @DataProvider(name = "submitIncomeData")
     public Object[][] submitIncomeData() {
         return new Object[][]{
-                {"2025-01-01", "234","2025","1"}
+                {"01-01-2025", "567","2025","1", "2025-01-01"}
         };
     }
 
     @Test(dataProvider = "submitIncomeData")
-    public void submitIncomeTest(String date,String amount, String year, String month) throws Exception {
+    public void submitIncomeTest(String date,String amount, String year, String month, String outdate) throws Exception {
         homePage.submitIncome(date, amount);
+        Thread.sleep(5000);
         homePage.goToHistory();
         HistoryPage historyPage = new HistoryPage(driver);
         historyPage.selectYear(year);
         historyPage.selectMonth(month);
-        Assert.assertTrue(historyPage.isTransactionPresent(date, amount), "Submitted income not found in history!");
+        Thread.sleep(5000);
+        Assert.assertTrue(historyPage.isTransactionPresent(outdate, amount), "Submitted income not found in history!");
     }
 
     @DataProvider(name = "submitExpenseData")
     public Object[][] submitExpenseData() {
         return new Object[][]{
-                {"2025-01-03", "1000","2025","1", "Transportation"}
+                {"02-02-2025", "123","2025","2", "Transportation", "2025-02-02"}
         };
     }
 
     @Test(dataProvider = "submitExpenseData")
-    public void submitExpenseTest(String date,String amount, String year, String month, String category) throws Exception {
+    public void submitExpenseTest(String date,String amount, String year, String month, String category, String outdate) throws Exception {
         homePage.submitExpense(date, amount, category);
         homePage.goToHistory();
         HistoryPage historyPage = new HistoryPage(driver);
         historyPage.selectYear(year);
         historyPage.selectMonth(month);
-        Assert.assertTrue(historyPage.isTransactionPresent(date, amount), "Submitted expense not found in history!");
+        Assert.assertTrue(historyPage.isTransactionPresent(outdate, amount), "Submitted expense not found in history!");
     }
 
     @DataProvider(name = "submitNegativeIncomeData")
     public Object[][] submitNegativeIncomeData() {
         return new Object[][]{
-                {"2025-01-01", "-250","2025","1"}
+                {"12-12-2025", "-300","2025","12", "2025-12-12"}
         };
     }
 
     @Test(dataProvider = "submitIncomeData", description = "Bug")
-    public void submitNegativeIncomeTest(String date,String amount, String year, String month) throws Exception {
+    public void submitNegativeIncomeTest(String date,String amount, String year, String month, String outdate) throws Exception {
         homePage.submitIncome(date, amount);
         homePage.goToHistory();
         HistoryPage historyPage = new HistoryPage(driver);
         historyPage.selectYear(year);
         historyPage.selectMonth(month);
-        Assert.assertTrue(historyPage.isTransactionPresent(date, amount), "You can't make a trx with negative value!");
+        Assert.assertTrue(historyPage.isTransactionPresent(outdate, amount), "You can't make a trx with negative value!");
     }
 
     @SneakyThrows

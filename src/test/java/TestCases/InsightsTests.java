@@ -50,7 +50,7 @@ public class InsightsTests extends Browser_Initiation {
     @DataProvider(name = "editData")
     public Object[][] editData() {
         return new Object[][]{
-                {"2025", "1"}
+                {"2025", "12"}
         };
     }
 

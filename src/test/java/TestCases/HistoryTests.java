@@ -73,7 +73,7 @@ public class HistoryTests extends Browser_Initiation {
     @DataProvider(name = "editData")
     public Object[][] editData() {
         return new Object[][]{
-                {"2025", "1", "2025-12-05", "2500", "Food" }
+                {"2025", "12", "2025-12-12", "12-12-2025", "2500", "Food" }
         };
     }
 
@@ -91,13 +91,13 @@ public class HistoryTests extends Browser_Initiation {
     }
 
     @Test(dataProvider = "editData")
-    public void clickEditOnFirstRow(String year, String month, String date, String amount, String category) throws Exception {
+    public void clickEditOnFirstRow(String year, String month, String date, String outdate, String amount, String category) throws Exception {
         historyPage.selectYear(year);
         historyPage.selectMonth(month);
 
         historyPage.clickEditOnRow(0);
 
-        historyPage.editTransactionDate(0, date);
+        historyPage.editTransactionDate(0, outdate);
         historyPage.editAmount(0, amount);
         historyPage.selectCategory(0, category);
 

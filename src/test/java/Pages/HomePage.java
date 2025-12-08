@@ -1,6 +1,7 @@
 package Pages;
 
 import Util.PageBase;
+import lombok.SneakyThrows;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -59,6 +60,7 @@ public class HomePage extends PageBase {
 
 
 
+    @SneakyThrows
     public void submitIncome(String date, String amount) {
         waitElementToDisplay(incomeDate, 2);
         incomeDate.sendKeys(date);
